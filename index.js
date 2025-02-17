@@ -26,6 +26,7 @@ function startOscillator1() {
 function stopOscillator1() {
     if (oscillator1) {
         oscillator1.stop();
+        oscillator1.disconnect();
         oscillator1 = null; // Reset oscillator
     }
 }
@@ -44,6 +45,7 @@ function startOscillator2() {
 function stopOscillator2() {
     if (oscillator2) {
         oscillator2.stop();
+        oscillator2.disconnect();
         oscillator2 = null; // Reset oscillator
     }
 }
