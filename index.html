@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="audience" content="width=device-width, initial-scale=1.0">
+    <title>Lara WebAudio</title>
+    <style>
+        body {
+            background-color: #f0f8ff;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        h2 {
+            color: #555;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #a09145;
+        }
+        input[type="range"] {
+            width: 300px;
+            margin: 10px;
+            background-color: #e7f3fe;
+            border-radius: 5px;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 15px;
+            height: 15px;
+            background: #4CAF50;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 15px;
+            height: 15px;
+            background: #4CAF50;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .slider-label {
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <h1>Lara WebAudio</h1>
+
+    <h2>Oscillator 1</h2>
+    <button id="startOsc1">Start Oscillator 1</button>
+    <button id="stopOsc1">Stop Oscillator 1</button>
+    <br>
+    <label class="slider-label" for="pitch1">Pitch (Hz):</label>
+    <input type="range" id="pitch1" min="100" max="1000" value="440">
+    <span id="pitchValue1">440</span> Hz
+    <br>
+    <label class="slider-label" for="volume1">Volume:</label>
+    <input type="range" id="volume1" min="0" max="1" step="0.01" value="0.5">
+    <span id="volumeValue1">50</span>%
+
+    <h2>Oscillator 2</h2>
+    <button id="startOsc2">Start Oscillator 2</button>
+    <button id="stopOsc2">Stop Oscillator 2</button>
+    <br>
+    <label class="slider-label" for="pitch2">Pitch (Hz):</label>
+    <input type="range" id="pitch2" min="100" max="1000" value="330">
+    <span id="pitchValue2">330</span> Hz
+    <br>
+    <label class="slider-label" for="volume2">Volume:</label>
+    <input type="range" id="volume2" min="0" max="1" step="0.01" value="0.5">
+    <span id="volumeValue2">50</span>%
+
+    <script>
+        let audioContext;
+        let oscillator1, oscillator2;
+        let gainNode1, gainNode2;
+
+        function initAudio() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                gainNode1 = audioContext.createGain();
+                gainNode2 = audioContext.createGain();
+                gainNode1.connect(audioContext.destination);
+                gainNode2.connect(audioContext.destination);
+            }
+        }
+
+        function startOscillator1() {
+            initAudio();
+            if (oscillator1) oscillator1.stop(); // Stop previous oscillator if running
+            oscillator1 = audioContext.createOscillator();
+            oscillator1.type = 'sine';
+            oscillator1.frequency.setValueAtTime(document.getElementById('pitch1').value, audioContext.currentTime);
+            gainNode1.gain.setValueAtTime(document.getElementById('volume1').value, audioContext.currentTime);
+            oscillator1.connect(gainNode1);
+            oscillator1.start();
+        }
+
+        function stopOscillator1() {
+            if (osc
