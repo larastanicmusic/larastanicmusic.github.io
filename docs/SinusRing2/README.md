@@ -1,7 +1,7 @@
-# SinusRing2 Project
+# audience oscillators
 
 ## Overview
-SinusRing2 is a web-based audio application that allows users to generate sound using two oscillators. Users can control the pitch and volume of each oscillator through a user-friendly interface.
+audience oscillators is a web-based audio application that allows users to generate sound using two oscillators. Users can control the pitch and volume of each oscillator through a user-friendly interface.
 
 ## Features
 - Two independent oscillators with adjustable pitch (100 Hz to 1000 Hz).
