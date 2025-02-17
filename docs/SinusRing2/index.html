@@ -97,6 +97,7 @@
                 gainNode2 = audioContext.createGain();
                 gainNode1.connect(audioContext.destination);
                 gainNode2.connect(audioContext.destination);
+                console.log("Audio context initialized");
             }
         }
 
@@ -109,12 +110,14 @@
             gainNode1.gain.setValueAtTime(document.getElementById('volume1').value, audioContext.currentTime);
             oscillator1.connect(gainNode1);
             oscillator1.start();
+            console.log("Oscillator 1 started");
         }
 
         function stopOscillator1() {
             if (oscillator1) {
                 oscillator1.stop();
                 oscillator1 = null; // Reset oscillator
+                console.log("Oscillator 1 stopped");
             }
         }
         
@@ -127,12 +130,14 @@
             gainNode2.gain.setValueAtTime(document.getElementById('volume2').value, audioContext.currentTime);
             oscillator2.connect(gainNode2);
             oscillator2.start();
+            console.log("Oscillator 2 started");
         }
         
         function stopOscillator2() {
             if (oscillator2) {
                 oscillator2.stop();
                 oscillator2 = null; // Reset oscillator
+                console.log("Oscillator 2 stopped");
             }
         }
         
@@ -145,6 +150,7 @@
             document.getElementById('pitchValue1').textContent = this.value;
             if (oscillator1) {
                 oscillator1.frequency.setValueAtTime(this.value, audioContext.currentTime);
+                console.log("Oscillator 1 pitch set to " + this.value);
             }
         });
         
@@ -152,6 +158,7 @@
             document.getElementById('volumeValue1').textContent = Math.round(this.value * 100);
             if (gainNode1) {
                 gainNode1.gain.setValueAtTime(this.value, audioContext.currentTime);
+                console.log("Oscillator 1 volume set to " + this.value);
             }
         });
         
@@ -159,6 +166,7 @@
             document.getElementById('pitchValue2').textContent = this.value;
             if (oscillator2) {
                 oscillator2.frequency.setValueAtTime(this.value, audioContext.currentTime);
+                console.log("Oscillator 2 pitch set to " + this.value);
             }
         });
         
@@ -166,6 +174,7 @@
             document.getElementById('volumeValue2').textContent = Math.round(this.value * 100);
             if (gainNode2) {
                 gainNode2.gain.setValueAtTime(this.value, audioContext.currentTime);
+                console.log("Oscillator 2 volume set to " + this.value);
             }
         });
     </script>
