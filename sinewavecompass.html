@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sinewave compass simulator</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #FFD700; /* Slightly darker pleasant yellow */
+            font-family: 'Verdana', sans-serif; /* Font set to Verdana */
+            color: #333; /* Dark text color for contrast */
+            text-align: center; /* Center text */
+        }
+        h1 {
+            font-size: 2.5em; /* Increase title size */
+            margin-bottom: 20px;
+            font-weight: lighter; /* Light font */
+            text-transform: lowercase; /* All letters lowercase */
+        }
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+        .slider {
+            -webkit-appearance: none;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: conic-gradient(
+                #FF69B4 0deg, /* Rose color */
+                #FF69B4 var(--value),
+                #ccc var(--value),
+                #ccc 360deg
+            );
+            outline: none;
+            cursor: pointer;
+            position: relative;
+        }
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #FF69B4; /* Rose color for the thumb */
+            cursor: pointer;
+            position: relative;
+            top: -90px; /* Adjust to position the thumb in the center */
+        }
+    </style>
+</head>
+<body>
+    <h1>sinewave compass simulator</h1>
+    <button id="startButton">Start</button>
+    <button id="stopButton">Stop</button>
+    <input type="range" id="frequencySlider" class="slider" min="100" max="1000" value="100" step="1" />
+
+    <script>
+        const startButton = document.getElementById('startButton');
+        const stopButton = document.getElementById('stopButton');
+        const frequencySlider = document.getElementById('frequencySlider');
+
+        let audioContext;
+        let oscillator;
+
+        startButton.addEventListener('click', startOscillator);
+        stopButton.addEventListener('click', stopOscillator);
+        frequencySlider.addEventListener('input', updateFrequencyFromSlider);
+
+        function startOscillator() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (oscillator) {
+                oscillator.stop();
+                oscillator.disconnect();
+            }
+            oscillator = audioContext.createOscillator();
+            oscillator.type = 'sine'; // Sine wave
+            oscillator.frequency.setValueAtTime(frequencySlider.value, audioContext.currentTime);
+            oscillator.connect(audioContext.destination);
+            oscillator.start();
+        }
+
+        function stopOscillator() {
+            if (oscillator) {
+                oscillator.stop();
+                oscillator.disconnect();
+                oscillator = null;
+            }
+        }
+
+        function updateFrequencyFromSlider() {
+            const frequency = frequencySlider.value;
+            if (oscillator) {
+                oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+            }
+            document.documentElement.style.setProperty('--value', (frequency - 100) / 900 * 360 + 'deg'); // Update slider color
+        }
+
+        // Initialize the slider color
+        updateFrequencyFromSlider();
+    </script>
+</body>
+</html>
