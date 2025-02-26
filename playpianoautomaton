@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Piano_Automaton</title>
+   <style>
+       .klaviatur {
+           position: relative;
+           width: 100%;
+           max-width: 420px;
+           height: auto;
+           border: 2px solid #000;
+           display: flex;
+           flex-wrap: wrap;
+       }
+
+       /* Weiße Tasten */
+       .weisse-taste {
+           width: calc(100% / 7);
+           height: 20vw;
+           background: white;
+           border: 1px solid black;
+           box-sizing: border-box;
+           text-align: center;
+           cursor: pointer;
+           font-family: Verdana, sans-serif;
+           font-size: 4vw;
+           display: flex;
+           align-items: flex-end;
+           justify-content: center;
+           padding-bottom: 1vw;
+       }
+
+       /* Schwarze Tasten */
+       .schwarze-taste {
+           width: calc(100% / 9);
+           height: 15vw;
+           background: black;
+           position: absolute;
+           z-index: 2;
+           cursor: pointer;
+           text-align: center;
+           color: white;
+           font-family: Verdana, sans-serif;
+           font-size: 4vw;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+       }
+
+       /* Positionierung der schwarzen Tasten */
+       .cis { left: 12%; }
+       .dis { left: 28%; }
+       .fis { left: 60%; }
+       .gis { left: 76%; }
+       .ais { left: 90%; }
+       
+       /* Title style */
+       h2 {
+           font-family: Verdana, sans-serif;
+           font-size: 5vw;
+           font-weight: 300; /* Light font weight */
+           text-align: center;
+       }
+
+       /* Text display style */
+       #textDisplay {
+           width: 100%;
+           max-width: 420px;
+           height: 20vw;
+           font-family: Verdana, sans-serif;
+           font-size: 6vw;
+           text-align: center;
+           line-height: 20vw; /* Center text vertically */
+           border: 2px solid #000;
+           margin: 20px auto;
+       }
+
+       /* MIDI note display style */
+       #midiNoteDisplay {
+           margin-top: 20px;
+           font-family: Verdana, sans-serif;
+           font-size: 4vw;
+           text-align: center;
+       }
+
+       /* Play All Notes button style */
+       #playAllButton {
+           width: 100%;
+           max-width: 420px;
+           height: 10vw;
+           font-family: Verdana, sans-serif;
+           font-size: 4vw;
+           margin-top: 20px;
+           cursor: pointer;
+       }
+   </style>
+</head>
+<body>
+    <h2>Piano_Automaton</h2>
+    <div id="textDisplay">ready</div>
+    <div class="klaviatur">
+        <!-- Weiße Tasten: C D E F G A B -->
+        <div class="weisse-taste" data-midi="60">C</div>
+        <div class="weisse-taste" data-midi="62">D</div>
+        <div class="weisse-taste" data-midi="64">E</div>
+        <div class="weisse-taste" data-midi="65">F</div>
+        <div class="weisse-taste" data-midi="67">G</div>
+        <div class="weisse-taste" data-midi="69">A</div>
+        <div class="weisse-taste" data-midi="71">B</div>
+
+        <!-- Schwarze Tasten: C♯ D♯ F♯ G♯ A♯ -->
+        <div class="schwarze-taste cis" data-midi="61">C♯</div>
+        <div class="schwarze-taste dis" data-midi="63">D♯</div>
+        <div class="schwarze-taste fis" data-midi="66">F♯</div>
+        <div class="schwarze-taste gis" data-midi="68">G♯</div>
+        <div class="schwarze-taste ais" data-midi="70">A♯</div>
+    </div>
+    <button id="playAllButton">play all notes together</button>
+    <div id="midiNoteDisplay">MIDI Note: </div>
+
+    <script>
+        var gConnection;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            ws_connect();
+        });
+
+        function ws_connect() {
+            if ('WebSocket' in window) {
+                gConnection = new WebSocket('ws://' + window.location.hostname + ':8080');
+                gConnection.onopen = function(ev) {
+                    console.log('WebSocket connection opened');
+                };
+                gConnection.onclose = function(ev) {
+                    console.log('WebSocket connection closed');
+                };
+                gConnection.onmessage = function(ev) {
+                    console.log('Message from server: ', ev.data);
+                };
+                gConnection.onerror = function(ev) {
+                    alert("Server error");
+                };
+            } else {
+                alert("WebSocket is not supported by your browser.");
+            }
+        }
+
+        function sendMidiNote(note) {
+            console.log(`MIDI Note: ${note}`);
+            if (gConnection && gConnection.readyState === WebSocket.OPEN) {
+                gConnection.send(JSON.stringify({ type: 'midi', note: note }));
+            }
+            document.getElementById('midiNoteDisplay').textContent = `MIDI Note: ${note}`;
+        }
+
+        document.querySelectorAll('.weisse-taste, .schwarze-taste').forEach(taste => {
+            taste.addEventListener('click', () => {
+                const midiNote = taste.getAttribute('data-midi');
+                sendMidiNote(midiNote);
+            });
+            taste.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                const midiNote = taste.getAttribute('data-midi');
+                sendMidiNote(midiNote);
+            });
+        });
+    </script>
+</body>
+</html>
