@@ -6,8 +6,11 @@
    <meta name="viewport" content="width=device-width, hight=device-hight, initial-scale=1.0">
    <title>PIANO_AUTOMATON</title>
    <style>
-.prevent-select {  -webkit-user-select: none; /* Safari */  user-select: none; /* Standard syntax */
-         font-family: Verdana, sans-serif; }
+.prevent-select {
+  -webkit-user-select: none; /* Safari */
+  user-select: none; /* Standard syntax */
+         font-family: Verdana, sans-serif; 
+}
   
        #status {
           position: fixed;
@@ -210,7 +213,7 @@
 
         <!-- Black Keys: C# D# F# G# A# -->
         <div class="black-key" data-midi="61">C#</div>
-        <div class="black-key" data-midi="63">D#¯</div>
+        <div class="black-key" data-midi="63">D#Â¯</div>
         <div class="black-key" data-midi="66">F#</div>
         <div class="black-key" data-midi="68">G#</div>
         <div class="black-key" data-midi="70">A#</div>
@@ -427,7 +430,9 @@ document.getElementById('glissandoSlider').value="0"
         sendVolume()
         })
 
-document.addEventListener('dblclick', function(event) {    event.preventDefault();}, { passive: false });
+document.addEventListener('dblclick', function(event) {
+    event.preventDefault();
+}, { passive: false });
 
         document.getElementById('speedSlider').addEventListener('input', function() {
             document.getElementById('speedDisplay').textContent = `SPEED: ${this.value}%`
