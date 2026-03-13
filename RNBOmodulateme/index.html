@@ -232,6 +232,9 @@ body{
 
 <script>
 function setupUI(){
+    document.querySelectorAll("#rnbo-parameter-sliders label").forEach(label => {
+    label.textContent = label.textContent.replace(":", "");
+});
     const container = document.getElementById("rnbo-parameter-sliders");
     const title = document.getElementById("patcher-title");
     if (!container) return;
